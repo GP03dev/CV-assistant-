@@ -28,7 +28,7 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
   const [isUserTalking, setIsUserTalking] = useState(false);
   const [transcriptHistory, setTranscriptHistory] = useState<Array<{ role: 'assistant' | 'user'; text: string }>>([]);
   const [currentTranscript, setCurrentTranscript] = useState('');
-  const [statusMessage, setStatusMessage] = useState('Initiating executive secure voice line...');
+  const [statusMessage, setStatusMessage] = useState('Établissement de la ligne vocale sécurisée...');
 
   const wsRef = useRef<WebSocket | null>(null);
   const recognitionRef = useRef<any>(null);
@@ -71,23 +71,17 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
 
   const startCall = async () => {
     setCallState('connecting');
-    setStatusMessage('Connecting to Aria (Giulio’s Executive Voice Agent)...');
+    setStatusMessage('Connecting to Aria (Giulio Pintus\'s Assistant)...');
 
-    // Initial greeting in history
     setTranscriptHistory([
       { role: 'assistant', text: AGENT_PROFILE.scriptAtStart },
     ]);
 
-    // Connect to WebSocket /live if available, else standard interactive speech pipeline
     try {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const wsUrl = `${protocol}//${window.location.host}/live`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
-
-      ws.onopen = () => {
-        console.log('Live voice WebSocket connected');
-      };
 
       ws.onmessage = (event) => {
         try {
@@ -105,14 +99,11 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
         } catch (_) {}
       };
 
-      ws.onerror = (e) => {
-        console.warn('Live WebSocket fallback to standard Voice Agent pipeline');
+      ws.onerror = () => {
+        console.warn('Fallback to standard audio conversation');
       };
-    } catch (_) {
-      // WebSocket fallback handled below
-    }
+    } catch (_) {}
 
-    // Play the designated opening greeting script immediately
     try {
       const res = await fetch('/api/tts', {
         method: 'POST',
@@ -124,7 +115,7 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
       });
       const ttsData = await res.json();
       setCallState('connected');
-      setStatusMessage('Voice line connected • Aria is ready to speak');
+      setStatusMessage('Voice line connected • Aria is listening');
 
       if (ttsData.audio) {
         setIsSpeaking(true);
@@ -136,7 +127,6 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
       setStatusMessage('Voice line connected');
     }
 
-    // Initialize microphone listening loop
     startVoiceRecognition();
   };
 
@@ -145,18 +135,14 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setStatusMessage('Microphone speech recognition not supported in this browser. Please use text questions below.');
+      setStatusMessage('Speech recognition not supported in this browser. Please use text inquiries below.');
       return;
     }
 
     const rec = new SpeechRecognition();
     rec.continuous = true;
     rec.interimResults = true;
-    rec.lang = 'en-US'; // Supports international speech
-
-    rec.onstart = () => {
-      setIsUserTalking(false);
-    };
+    rec.lang = 'en-US';
 
     rec.onresult = async (event: any) => {
       const lastIndex = event.results.length - 1;
@@ -173,14 +159,7 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
       }
     };
 
-    rec.onerror = (event: any) => {
-      if (event.error !== 'no-speech') {
-        console.warn('Voice rec notice:', event.error);
-      }
-    };
-
     rec.onend = () => {
-      // Keep listening if call is still active and not muted
       if (callState === 'connected' && !isMuted && isOpen) {
         try {
           rec.start();
@@ -192,7 +171,7 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
       rec.start();
       recognitionRef.current = rec;
     } catch (err) {
-      console.warn('Mic start failed:', err);
+      console.warn('Mic start notice:', err);
     }
   };
 
@@ -203,7 +182,7 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
     setIsSpeaking(false);
 
     setTranscriptHistory((prev) => [...prev, { role: 'user', text: spokenText }]);
-    setStatusMessage('Aria is processing and preparing voice reply...');
+    setStatusMessage('Aria is thinking and preparing her spoken reply...');
 
     try {
       const res = await fetch('/api/chat', {
@@ -228,9 +207,9 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
           setIsSpeaking(true);
           await audioService.playBase64Audio(data.audio);
           setIsSpeaking(false);
-          setStatusMessage('Listening to you...');
+          setStatusMessage('Aria is listening to you...');
         } else {
-          setStatusMessage('Listening to you...');
+          setStatusMessage('Aria is listening to you...');
         }
       }
     } catch (err) {
@@ -258,36 +237,36 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xl animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-[#FAF7F2] border border-[#DDD3C4] rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col relative text-stone-900">
         {/* Top Bar */}
-        <div className="px-6 py-4 bg-slate-950/60 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-4 bg-[#F5EFE6] border-b border-[#E8DFD3] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
+            <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 font-bold">
               A
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-white">{AGENT_PROFILE.name}</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                  Gemini Live Voice
+                <h3 className="text-sm font-bold text-stone-900">{AGENT_PROFILE.name}</h3>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Direct Voice Line
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Giulio Pintus Executive Career Call</p>
+              <p className="text-xs text-stone-500">Interview & Career Q&A with Giulio Pintus</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => generateCVPdf()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-stone-50 text-stone-800 text-xs font-semibold border border-[#DDD3C4] transition-colors shadow-2xs cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5 text-amber-400" />
+              <Download className="w-3.5 h-3.5 text-amber-700" />
               <span>Download CV</span>
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-white hover:bg-stone-50 text-stone-500 hover:text-stone-800 border border-[#DDD3C4] transition-colors cursor-pointer"
             >
               ✕
             </button>
@@ -295,88 +274,89 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
         </div>
 
         {/* Central Audio & Visualizer Display */}
-        <div className="p-8 flex flex-col items-center justify-center text-center bg-gradient-to-b from-slate-950/80 to-slate-900 relative min-h-[260px]">
+        <div className="p-8 flex flex-col items-center justify-center text-center bg-gradient-to-b from-[#F5EFE6] to-[#FAF7F2] relative min-h-[260px]">
           {/* Animated Waveform / Pulse Indicator */}
           <div className="relative flex items-center justify-center mb-6">
             <div
               className={`w-32 h-32 rounded-full flex items-center justify-center transition-all duration-300 ${
                 isSpeaking
-                  ? 'bg-amber-500/20 border-2 border-amber-400 shadow-[0_0_50px_rgba(245,158,11,0.4)] scale-110'
+                  ? 'bg-amber-100/90 border-2 border-amber-500 shadow-[0_0_40px_rgba(217,119,6,0.25)] scale-110'
                   : isUserTalking
-                  ? 'bg-emerald-500/20 border-2 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.3)] scale-105'
-                  : 'bg-slate-800/80 border border-slate-700'
+                  ? 'bg-emerald-100/90 border-2 border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.25)] scale-105'
+                  : 'bg-white border border-[#DDD3C4] shadow-xs'
               }`}
             >
               {isSpeaking ? (
-                <div className="flex items-center gap-1.5 h-8">
-                  {[...Array(6)].map((_, i) => (
+                <div className="flex items-center gap-1.5 h-10">
+                  {[...Array(9)].map((_, i) => (
                     <span
                       key={i}
-                      className="w-1.5 bg-amber-400 rounded-full animate-pulse"
+                      className="w-1.5 bg-gradient-to-t from-amber-600 to-amber-400 rounded-full animate-wave-1"
                       style={{
-                        height: `${Math.sin(i * 1.5) * 16 + 20}px`,
-                        animationDelay: `${i * 120}ms`,
+                        height: `${Math.sin(i * 0.8) * 22 + 16}px`,
+                        animationDelay: `${(i % 5) * 120}ms`,
                       }}
                     />
                   ))}
                 </div>
               ) : isUserTalking ? (
-                <div className="flex items-center gap-1.5 h-8">
-                  {[...Array(6)].map((_, i) => (
+                <div className="flex items-center gap-1.5 h-10">
+                  {[...Array(9)].map((_, i) => (
                     <span
                       key={i}
-                      className="w-1.5 bg-emerald-400 rounded-full animate-bounce"
+                      className="w-1.5 bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-full animate-bounce"
                       style={{
-                        height: `${Math.cos(i * 1.2) * 14 + 18}px`,
-                        animationDelay: `${i * 90}ms`,
+                        height: `${Math.cos(i * 0.7) * 20 + 14}px`,
+                        animationDelay: `${(i % 4) * 100}ms`,
                       }}
                     />
                   ))}
                 </div>
               ) : (
-                <Volume2 className="w-10 h-10 text-amber-400/80" />
+                <div className="flex flex-col items-center justify-center">
+                  <Volume2 className="w-9 h-9 text-amber-700 animate-pulse" />
+                </div>
               )}
             </div>
 
             {/* Ripple rings */}
             {isSpeaking && (
               <>
-                <div className="absolute inset-0 rounded-full border border-amber-400/30 animate-ping pointer-events-none" />
-                <div className="absolute -inset-4 rounded-full border border-amber-500/20 animate-pulse pointer-events-none" />
+                <div className="absolute inset-0 rounded-full border border-amber-400/50 animate-ping pointer-events-none" />
+                <div className="absolute -inset-4 rounded-full border border-amber-300/30 animate-pulse pointer-events-none" />
               </>
             )}
           </div>
 
           {/* Status Label */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-200 mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#DDD3C4] text-xs font-semibold text-stone-800 mb-2 shadow-2xs">
             <span
               className={`w-2 h-2 rounded-full ${
                 isSpeaking
-                  ? 'bg-amber-400 animate-ping'
+                  ? 'bg-amber-600 animate-ping'
                   : isUserTalking
-                  ? 'bg-emerald-400 animate-ping'
-                  : 'bg-emerald-500'
+                  ? 'bg-emerald-600 animate-ping'
+                  : 'bg-emerald-600'
               }`}
             />
             {statusMessage}
           </div>
 
-          <p className="text-xs text-slate-400 max-w-md">
-            Speak naturally into your microphone, or choose a prompt below. Aria is trained on
-            Giulio's corporate finance background, Century 21 internship, and availability.
+          <p className="text-xs text-stone-500 max-w-md leading-relaxed">
+            Speak naturally into your microphone. Aria is trained on Giulio's Master's in Entrepreneurship, his 6-month Century 21 mission, and his AI implementation track record.
           </p>
         </div>
 
         {/* Live Subtitles & Transcript Box */}
-        <div className="px-6 py-4 bg-slate-950/70 border-t border-b border-slate-800 max-h-48 overflow-y-auto space-y-3">
+        <div className="px-6 py-4 bg-white border-t border-b border-[#E8DFD3] max-h-48 overflow-y-auto space-y-3">
           {transcriptHistory.slice(-4).map((item, idx) => (
             <div
               key={idx}
               className={`text-xs flex gap-2 ${
-                item.role === 'assistant' ? 'text-amber-200/90' : 'text-slate-300'
+                item.role === 'assistant' ? 'text-stone-800' : 'text-amber-900 font-medium'
               }`}
             >
-              <strong className="shrink-0 text-slate-400">
+              <strong className="shrink-0 text-stone-500">
                 {item.role === 'assistant' ? 'Aria:' : 'You:'}
               </strong>
               <span className="leading-relaxed">{item.text}</span>
@@ -384,27 +364,27 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
           ))}
 
           {currentTranscript && (
-            <div className="text-xs text-slate-400 italic">
+            <div className="text-xs text-stone-400 italic">
               {currentTranscript}
             </div>
           )}
         </div>
 
         {/* Spoken Prompt Shortcuts */}
-        <div className="px-6 py-3 bg-slate-950/40 flex items-center gap-2 overflow-x-auto text-xs">
-          <span className="text-slate-500 font-bold uppercase text-[10px] shrink-0">
+        <div className="px-6 py-3 bg-[#FAF7F2] flex items-center gap-2 overflow-x-auto text-xs border-b border-[#E8DFD3]">
+          <span className="text-stone-500 font-bold uppercase text-[10px] shrink-0">
             Ask aloud:
           </span>
           {[
-            'What is Giulio looking for?',
-            'Tell me about his ESCE finance degree',
-            'What are his languages?',
-            'What are his contact details?',
+            'How did Giulio deploy AI at Century 21?',
+            'How did he guide buyers and sellers?',
+            'Tell me about his Master in Entrepreneurship',
+            'What are his financial and legal strengths?',
           ].map((prompt, i) => (
             <button
               key={i}
               onClick={() => handleUserSpoke(prompt)}
-              className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white shrink-0 border border-slate-700 transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-white hover:bg-stone-50 text-stone-700 hover:text-stone-900 shrink-0 border border-[#DDD3C4] transition-colors shadow-2xs cursor-pointer"
             >
               {prompt}
             </button>
@@ -412,14 +392,14 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
         </div>
 
         {/* Bottom Call Controls */}
-        <div className="p-6 bg-slate-950 flex items-center justify-center gap-6">
+        <div className="p-6 bg-[#F5EFE6] flex items-center justify-center gap-6">
           {/* Mute Button */}
           <button
             onClick={toggleMute}
-            className={`p-4 rounded-2xl border transition-all ${
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
               isMuted
-                ? 'bg-rose-500/20 border-rose-500 text-rose-300'
-                : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700'
+                ? 'bg-rose-100 border-rose-300 text-rose-700 shadow-2xs'
+                : 'bg-white border-[#DDD3C4] text-stone-700 hover:bg-stone-50 shadow-2xs'
             }`}
             title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
           >
@@ -429,8 +409,8 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
           {/* End Call Button */}
           <button
             onClick={onClose}
-            className="px-6 py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold flex items-center gap-2 shadow-xl shadow-rose-600/30 transition-all hover:scale-105 active:scale-95"
-            title="End voice conversation"
+            className="px-6 py-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold flex items-center gap-2 shadow-lg shadow-rose-600/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            title="End voice call"
           >
             <PhoneOff className="w-6 h-6" />
             <span>End Call</span>

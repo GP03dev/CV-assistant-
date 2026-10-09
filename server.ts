@@ -35,8 +35,9 @@ const SYSTEM_INSTRUCTION = `${AGENT_PROFILE.systemPrompt}
 Comprehensive reference CV data:
 Name: ${GIULIO_CV.name}
 Title: ${GIULIO_CV.title}
-Target Internship: ${GIULIO_CV.internshipGoal.role} (Duration: ${GIULIO_CV.internshipGoal.duration}, Timeframe: ${GIULIO_CV.internshipGoal.timeframe}, Location: ${GIULIO_CV.internshipGoal.location})
-Key Responsibilities: ${GIULIO_CV.internshipGoal.tasks.join(', ')}
+Completed Key Internship: ${GIULIO_CV.completedInternship.agency} (${GIULIO_CV.completedInternship.duration}, ${GIULIO_CV.completedInternship.location}).
+Role & Major Achievements: ${GIULIO_CV.completedInternship.summary}
+Specific Missions: ${GIULIO_CV.completedInternship.achievements.join('; ')}
 Contact: Email: ${GIULIO_CV.contact.email}, Phone: ${GIULIO_CV.contact.phone}, Base: ${GIULIO_CV.contact.locations.join(' and ')}, Age: ${GIULIO_CV.contact.age} (Born ${GIULIO_CV.contact.birthDate})
 Languages: ${GIULIO_CV.languages.map(l => `${l.language}: ${l.level} (${l.description})`).join('; ')}
 Education:

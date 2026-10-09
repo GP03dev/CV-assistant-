@@ -10,6 +10,7 @@ import { ChatAssistant } from './components/ChatAssistant.tsx';
 import { CVOverviewSection } from './components/CVOverviewSection.tsx';
 import { VoiceCallModal } from './components/VoiceCallModal.tsx';
 import { CVSummaryModal } from './components/CVSummaryModal.tsx';
+import { CaseStudyCentury21 } from './components/CaseStudyCentury21.tsx';
 import { AGENT_PROFILE, GIULIO_CV } from './data/cvData.ts';
 import { generateCVPdf, downloadMarkdownSummary } from './utils/pdfGenerator.ts';
 import {
@@ -40,7 +41,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
+    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 flex flex-col font-sans selection:bg-amber-200 selection:text-amber-900">
       {/* Top Navbar */}
       <Navbar
         onOpenVoiceCall={() => setIsVoiceCallOpen(true)}
@@ -58,14 +59,14 @@ export default function App() {
         />
 
         {/* Navigation Tabs */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-4">
+        <div className="flex items-center justify-between border-b border-[#E6DDD2] pb-3 flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveMainTab('assistant')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
                 activeMainTab === 'assistant'
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20'
-                  : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
+                  : 'bg-white/90 text-stone-700 hover:text-stone-900 hover:bg-[#F2ECE3] border border-[#E6DDD2]'
               }`}
             >
               <MessageSquare className="w-4 h-4" />
@@ -74,10 +75,10 @@ export default function App() {
 
             <button
               onClick={() => setActiveMainTab('cv')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
                 activeMainTab === 'cv'
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20'
-                  : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
+                  : 'bg-white/90 text-stone-700 hover:text-stone-900 hover:bg-[#F2ECE3] border border-[#E6DDD2]'
               }`}
             >
               <FileText className="w-4 h-4" />
@@ -86,24 +87,24 @@ export default function App() {
 
             <button
               onClick={() => setActiveMainTab('internship')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
                 activeMainTab === 'internship'
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20'
-                  : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
+                  : 'bg-white/90 text-stone-700 hover:text-stone-900 hover:bg-[#F2ECE3] border border-[#E6DDD2]'
               }`}
             >
               <Briefcase className="w-4 h-4" />
-              <span>Internship 2026 Details</span>
+              <span>Century 21 & AI (6-Month Mission)</span>
             </button>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
             <button
               onClick={() => generateCVPdf()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-stone-50 border border-[#E2D7C8] text-amber-800 font-semibold shadow-2xs transition-colors cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download PDF Summary</span>
+              <Download className="w-3.5 h-3.5 text-amber-700" />
+              <span>Download CV (PDF)</span>
             </button>
           </div>
         </div>
@@ -124,50 +125,50 @@ export default function App() {
 
             {/* Right Column: Quick Candidate Snapshot & Direct Download Card */}
             <div className="space-y-6">
-              <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+              <div className="bg-white border border-[#E6DDD2] rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-                    Executive Quick Snapshot
+                  <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
+                    Executive Snapshot
                   </span>
-                  <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                    Verified
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-200 text-emerald-800">
+                    Verified CV
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-bold text-white">{GIULIO_CV.name}</h3>
-                  <p className="text-xs text-amber-300 font-medium">
-                    Corporate Finance & International Management
+                  <h3 className="text-xl font-bold text-stone-900">{GIULIO_CV.name}</h3>
+                  <p className="text-xs text-amber-800 font-semibold mt-0.5">
+                    Master in Entrepreneurship & Consulting &bull; ESCE Paris
                   </p>
-                  <p className="text-xs text-slate-400 mt-1">
-                    ESCE Paris • BA3 Corporate Finance • 21 years old
+                  <p className="text-xs text-stone-500 mt-1">
+                    Trilingual EN / FR / IT &bull; 21 years old &bull; Paris / Brussels
                   </p>
                 </div>
 
                 {/* Key Points */}
-                <div className="space-y-2.5 text-xs text-slate-300 border-t border-b border-slate-800/80 py-4">
+                <div className="space-y-2.5 text-xs text-stone-700 border-t border-b border-[#EBE4D8] py-4">
                   <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
                     <span>
-                      <strong>Target Role:</strong> Responsable de gestion / Contrôle financier (6-month stage)
+                      <strong>Completed Mission:</strong> 6 Months at Century 21 (Client Care, Legal Admin & AI)
                     </span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
                     <span>
-                      <strong>Availability:</strong> 20 March - August/Sept 2026
+                      <strong>AI Implementation:</strong> Agency website AI chatbot & dynamic QR code visit scheduling
                     </span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
                     <span>
-                      <strong>Languages:</strong> Français (Native), Anglais (C2), Italien (C2)
+                      <strong>360° Client Guidance:</strong> End-to-end guidance for buyers and sellers from search to closing
                     </span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
                     <span>
-                      <strong>Locations:</strong> Paris, Île-de-France & Brussels
+                      <strong>Current Education:</strong> Master in Entrepreneurship & Consulting (ESCE Paris)
                     </span>
                   </div>
                 </div>
@@ -176,7 +177,7 @@ export default function App() {
                 <div className="space-y-2 pt-2">
                   <button
                     onClick={() => generateCVPdf()}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.01]"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-md shadow-amber-600/20 transition-all hover:scale-[1.01] cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download CV Summary (PDF)</span>
@@ -184,15 +185,15 @@ export default function App() {
 
                   <button
                     onClick={() => setIsVoiceCallOpen(true)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs border border-slate-700 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#F5EFE6] hover:bg-[#EDE5DA] text-stone-800 font-semibold text-xs border border-[#E2D7C8] transition-colors cursor-pointer"
                   >
-                    <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
+                    <PhoneCall className="w-3.5 h-3.5 text-amber-700" />
                     <span>Launch Voice Call (Live)</span>
                   </button>
 
                   <button
                     onClick={() => setIsCVModalOpen(true)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs border border-slate-800 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-stone-50 text-stone-700 hover:text-stone-900 text-xs border border-[#E2D7C8] transition-colors cursor-pointer shadow-2xs"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>View Full Resume Card</span>
@@ -201,22 +202,22 @@ export default function App() {
               </div>
 
               {/* Sample recruiter questions card */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Popular Recruiter Questions
+              <div className="bg-white border border-[#E6DDD2] rounded-3xl p-6 shadow-xs">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 mb-3 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+                  Popular Recruiter Questions for Aria
                 </h4>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {[
-                    "Why is Giulio passionate about corporate finance?",
-                    "What were his key responsibilities as BDE Treasurer?",
-                    "How does his Century 21 commercial experience help?",
-                    "What did he study during his Erasmus in Munich?",
+                    "How did Giulio implement AI (Chatbot & QR codes) at Century 21?",
+                    "What was his role with buyers and sellers from search to closing?",
+                    "How did he manage sales contracts and legal administration?",
+                    "Tell me about his Master in Entrepreneurship & Consulting at ESCE Paris.",
                   ].map((q, i) => (
                     <button
                       key={i}
                       onClick={() => handleAskAbout(q)}
-                      className="w-full text-left p-2 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-700/60"
+                      className="w-full text-left p-2.5 rounded-xl text-xs text-stone-700 hover:text-stone-900 bg-[#FAF7F2] hover:bg-[#F3EDE2] transition-colors border border-[#E8DFD3] hover:border-[#DACDBD] cursor-pointer"
                     >
                       &bull; {q}
                     </button>
@@ -232,98 +233,39 @@ export default function App() {
         )}
 
         {activeMainTab === 'internship' && (
-          <div className="space-y-6">
-            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/30 border border-amber-500/20 rounded-2xl p-8">
-              <div className="max-w-3xl">
-                <span className="text-xs uppercase font-extrabold tracking-wider text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-                  Internship Profile 2026
-                </span>
-                <h2 className="text-3xl font-extrabold text-white mt-4">
-                  {GIULIO_CV.internshipGoal.role}
-                </h2>
-                <p className="text-slate-300 mt-3 text-base leading-relaxed">
-                  After 4 years of rigorous university studies in business management and corporate finance (ICHEC Brussels, ESCE Paris, EU Business School Munich), Giulio is eager to commit to a 6-month mission where he can contribute to financial oversight, data audit, and management control.
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
-                    <span className="text-xs text-slate-400 uppercase font-bold">Duration</span>
-                    <p className="text-base font-bold text-white mt-0.5">{GIULIO_CV.internshipGoal.duration}</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
-                    <span className="text-xs text-slate-400 uppercase font-bold">Timeframe</span>
-                    <p className="text-base font-bold text-amber-300 mt-0.5">20 March - Sept 2026</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
-                    <span className="text-xs text-slate-400 uppercase font-bold">Location</span>
-                    <p className="text-base font-bold text-white mt-0.5">{GIULIO_CV.internshipGoal.location}</p>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <h3 className="text-base font-bold text-white mb-3">Key Target Contributions:</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {GIULIO_CV.internshipGoal.tasks.map((task, idx) => (
-                      <div key={idx} className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-start gap-2.5">
-                        <Award className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                        <span className="text-xs text-slate-200 font-medium">{task}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4 mt-8 pt-6 border-t border-slate-800">
-                  <button
-                    onClick={() => generateCVPdf()}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Download CV Summary (PDF)</span>
-                  </button>
-
-                  <a
-                    href={`mailto:${GIULIO_CV.contact.email}?subject=Opportunité%20Stage%20Responsable%20de%20gestion%20-%20Giulio%20Pintus`}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-amber-400" />
-                    <span>Contact Giulio directly ({GIULIO_CV.contact.email})</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CaseStudyCentury21 onAskAria={handleAskAbout} />
         )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-8 mt-12 text-xs text-slate-400">
+      <footer className="border-t border-[#E6DDD2] bg-[#FAF7F2] py-8 mt-12 text-xs text-stone-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-white">{GIULIO_CV.name}</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-stone-900">{GIULIO_CV.name}</span>
             <span>&bull;</span>
             <span>Represented by <strong>{AGENT_PROFILE.name}</strong></span>
             <span>&bull;</span>
-            <span>ESCE Paris (BA3 Corporate Finance)</span>
+            <span>ESCE Paris (Master in Entrepreneurship & Consulting)</span>
           </div>
 
           <div className="flex items-center gap-4">
             <button
               onClick={() => generateCVPdf()}
-              className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1"
+              className="text-amber-800 hover:text-amber-900 font-semibold flex items-center gap-1 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" /> Download CV (PDF)
             </button>
             <span>&bull;</span>
             <button
               onClick={() => downloadMarkdownSummary()}
-              className="text-slate-400 hover:text-white"
+              className="text-stone-600 hover:text-stone-900 cursor-pointer"
             >
               Markdown CV
             </button>
             <span>&bull;</span>
             <a
               href={`mailto:${GIULIO_CV.contact.email}`}
-              className="text-slate-400 hover:text-white"
+              className="text-stone-600 hover:text-stone-900 cursor-pointer"
             >
               {GIULIO_CV.contact.email}
             </a>

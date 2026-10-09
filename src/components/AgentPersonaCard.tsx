@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Sparkles, CheckCircle2, UserCheck, ShieldCheck, Play } from 'lucide-react';
+import {
+  Volume2,
+  VolumeX,
+  Sparkles,
+  PhoneCall,
+  UserCheck,
+  ShieldCheck,
+  Mic,
+  ArrowUpRight
+} from 'lucide-react';
 import { AGENT_PROFILE } from '../data/cvData.ts';
 import { audioService } from '../utils/audioPlayer.ts';
 
@@ -45,7 +54,6 @@ export const AgentPersonaCard: React.FC<Props> = ({
         await audioService.playBase64Audio(data.audio);
         setIsPlayingGreeting(false);
       } else {
-        // Fallback browser speech if TTS has issue
         if ('speechSynthesis' in window) {
           const utterance = new SpeechSynthesisUtterance(AGENT_PROFILE.scriptAtStart);
           utterance.onend = () => setIsPlayingGreeting(false);
@@ -66,134 +74,150 @@ export const AgentPersonaCard: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
-      {/* Background ambient glow */}
-      <div className="absolute -top-24 -right-24 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="relative overflow-hidden rounded-3xl bg-white border border-[#E6DDD2] p-6 sm:p-8 shadow-xs transition-all">
+      {/* Soft warm ambient lighting */}
+      <div className="absolute top-0 right-1/4 w-80 h-80 bg-amber-100/60 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-10 w-60 h-60 bg-orange-100/40 rounded-full blur-2xl pointer-events-none" />
 
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-800/80">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-slate-950 font-bold text-2xl shadow-lg shadow-amber-500/20">
-              A
+      <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-[#EFE8DE]">
+        <div className="flex items-center gap-4 sm:gap-5">
+          {/* Avatar with speaking wave rings */}
+          <div className="relative shrink-0">
+            <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-400 p-[1px] shadow-sm">
+              <div className="w-full h-full bg-[#FCFBF8] rounded-[15px] flex items-center justify-center text-amber-800 font-extrabold text-2xl">
+                A
+              </div>
             </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-slate-900 rounded-full flex items-center justify-center">
+            {/* Live Indicator */}
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-600 border-2 border-white rounded-full flex items-center justify-center">
               <span className="w-2 h-2 bg-white rounded-full animate-ping" />
             </div>
           </div>
 
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">
-                Official Agent
-              </span>
-              <span className="text-xs text-slate-400 flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Grounded on Verified CV
-              </span>
+            <div className="flex items-center gap-2 text-xs text-stone-600 font-medium">
+              <span className="text-amber-800 font-bold tracking-wide">Official AI Assistant</span>
+              <span aria-hidden="true">&bull;</span>
+              <span>Grounded on Verified CV</span>
+              <span aria-hidden="true">&bull;</span>
+              <span className="text-emerald-700 font-semibold">Gemini Live & Speech</span>
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight mt-1 flex items-center gap-2">
+
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight mt-0.5">
               {AGENT_PROFILE.name}
-              <span className="text-sm font-normal text-slate-400">({AGENT_PROFILE.role})</span>
+              <span className="text-sm font-normal text-stone-500 ml-2.5">
+                (Giulio Pintus's Executive Assistant)
+              </span>
             </h2>
           </div>
         </div>
 
-        {/* Quick Launch Voice & CV Buttons */}
+        {/* Primary CTA cluster */}
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <button
             onClick={onOpenVoiceMode}
-            className="flex-1 lg:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-sm transition-all shadow-lg shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98]"
+            className="flex-1 lg:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 via-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-amber-600/20 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
-            <Sparkles className="w-4 h-4" />
-            Launch Voice Call (Live)
+            <PhoneCall className="w-4 h-4" />
+            <span>Launch Voice Call (Live)</span>
           </button>
+
           <button
             onClick={onOpenCVModal}
-            className="flex-1 lg:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-sm transition-all border border-slate-700 hover:border-slate-600"
+            className="flex-1 lg:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#F5EFE6] hover:bg-[#EDE5DA] text-stone-800 font-semibold text-xs sm:text-sm transition-colors border border-[#E2D7C8] cursor-pointer"
           >
-            <UserCheck className="w-4 h-4 text-amber-400" />
-            Download CV Summary
+            <UserCheck className="w-4 h-4 text-amber-800" />
+            <span>View Certified CV</span>
           </button>
         </div>
       </div>
 
-      {/* Required Specifications Breakdown Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        {/* 1. Name of Agent */}
-        <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
-            Agent Name
+      {/* Specification Row with Opening Script Showcase */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-6 relative z-10">
+        {/* Left Column: Opening Script Callout (7 cols) */}
+        <div className="lg:col-span-7 bg-[#FAF7F2] border border-[#E8DFD3] rounded-2xl p-5 flex flex-col justify-between shadow-2xs">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-xs uppercase font-extrabold tracking-wider text-amber-800 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+                Official Opening Script
+              </span>
+
+              {/* Audio Audition Button with Visual Waveform */}
+              <button
+                onClick={handlePlayGreeting}
+                disabled={loadingAudio}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  isPlayingGreeting
+                    ? 'bg-amber-600 text-white shadow-sm'
+                    : 'bg-white hover:bg-stone-50 text-stone-800 border border-[#DDD3C4]'
+                }`}
+                title="Listen to opening greeting"
+              >
+                {loadingAudio ? (
+                  <span className="animate-spin text-xs">⏳</span>
+                ) : isPlayingGreeting ? (
+                  <>
+                    <div className="flex items-center gap-0.5 h-3">
+                      <span className="w-1 bg-white rounded-full animate-wave-1 h-3" />
+                      <span className="w-1 bg-white rounded-full animate-wave-2 h-2" />
+                      <span className="w-1 bg-white rounded-full animate-wave-3 h-3" />
+                    </div>
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="w-3.5 h-3.5 text-amber-700" />
+                    <span>Audition Aria's Voice</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="font-serif-luxury text-base sm:text-lg italic text-stone-800 leading-relaxed pt-1">
+              “{AGENT_PROFILE.scriptAtStart}”
+            </div>
           </div>
-          <div className="text-lg font-bold text-white flex items-center justify-between">
-            <span>{AGENT_PROFILE.name}</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-amber-300">
-              Executive AI
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 mt-2">
-            Designated career representative for Giulio Pintus.
+
+          <p className="text-xs text-stone-500 mt-4 pt-3 border-t border-[#E8DFD3]">
+            Aria answers your questions in <strong>English</strong>, <strong>French</strong>, or <strong>Italian</strong> with a professional, polite, and confident executive tone.
           </p>
         </div>
 
-        {/* 2. Role */}
-        <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
-            Role
-          </div>
-          <div className="text-sm font-semibold text-white leading-tight">
-            Executive AI Career Assistant
-          </div>
-          <p className="text-xs text-slate-400 mt-2">
-            Answers recruiter queries, details finance experience & internship goals.
-          </p>
-        </div>
+        {/* Right Column: Agent Persona & Voice Select (5 cols) */}
+        <div className="lg:col-span-5 bg-[#FAF7F2] border border-[#E8DFD3] rounded-2xl p-5 flex flex-col justify-between shadow-2xs">
+          <div>
+            <div className="text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+              Voice Selection & Personality
+            </div>
 
-        {/* 3. Voice & Personality */}
-        <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between">
-            <span>Voice & Personality</span>
-            <span className="text-[10px] text-emerald-400 font-mono">Gemini TTS</span>
-          </div>
-          <div className="flex items-center justify-between gap-2">
-            <select
-              value={selectedVoice}
-              onChange={(e) => onSelectVoice(e.target.value)}
-              className="bg-slate-900 border border-slate-700 text-xs text-white rounded-lg px-2.5 py-1 focus:ring-1 focus:ring-amber-500 outline-none w-full"
-            >
-              {AGENT_PROFILE.alternateVoices.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="text-xs text-slate-400 mt-2">
-            Tone: Professional, warm, articulate, polite, and confident.
-          </p>
-        </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs text-stone-600 block mb-1">
+                  Gemini TTS Voice Model:
+                </label>
+                <select
+                  value={selectedVoice}
+                  onChange={(e) => onSelectVoice(e.target.value)}
+                  className="w-full bg-white border border-[#DDD3C4] text-xs text-stone-800 rounded-xl px-3 py-2 focus:ring-2 focus:ring-amber-500/40 outline-none cursor-pointer"
+                >
+                  {AGENT_PROFILE.alternateVoices.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        {/* 4. Opening Script */}
-        <div className="bg-slate-950/60 border border-amber-500/30 rounded-xl p-4 relative group">
-          <div className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1 flex items-center justify-between">
-            <span>Script at Start</span>
-            <button
-              onClick={handlePlayGreeting}
-              disabled={loadingAudio}
-              className="text-xs flex items-center gap-1 text-amber-400 hover:text-amber-300 font-medium"
-              title="Audition Opening Script"
-            >
-              {loadingAudio ? (
-                <span className="animate-spin text-xs">⏳</span>
-              ) : isPlayingGreeting ? (
-                <VolumeX className="w-3.5 h-3.5" />
-              ) : (
-                <Volume2 className="w-3.5 h-3.5" />
-              )}
-              {isPlayingGreeting ? 'Stop' : 'Listen'}
-            </button>
+              <div className="text-xs text-stone-600 leading-relaxed">
+                <span className="text-stone-800 font-semibold">Agent Persona:</span> Articulate, polite, structured on financial management, real estate contracts, and entrepreneurial strategy.
+              </div>
+            </div>
           </div>
-          <div className="text-xs italic text-amber-200/90 font-serif leading-relaxed bg-amber-500/5 p-2 rounded-lg border border-amber-500/10">
-            “{AGENT_PROFILE.scriptAtStart}”
+
+          <div className="flex items-center justify-between text-xs text-stone-500 pt-3 border-t border-[#E8DFD3] mt-2">
+            <span>Latency: <strong className="text-emerald-700 font-semibold">Real-time</strong></span>
+            <span>Trilingual: <strong className="text-stone-800 font-semibold">EN &bull; FR &bull; IT</strong></span>
           </div>
         </div>
       </div>

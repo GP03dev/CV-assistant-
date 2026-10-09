@@ -1,0 +1,6 @@
+{
+  "name": "Giulio Pintus - Executive Career Assistant & Voice AI",
+  "description": "Professional AI Career & Voice Assistant for Giulio Pintus. Explore his background in Corporate Finance and International Management, engage in voice conversations, and download his CV summary.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

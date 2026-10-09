@@ -15,7 +15,9 @@ import {
   Award,
   Sparkles,
   ChevronRight,
-  Printer
+  Printer,
+  Car,
+  PhoneCall
 } from 'lucide-react';
 import { GIULIO_CV } from '../data/cvData.ts';
 import { generateCVPdf, downloadMarkdownSummary } from '../utils/pdfGenerator.ts';
@@ -64,7 +66,34 @@ export const CVOverviewSection: React.FC<Props> = ({ onAskAboutTopic }) => {
             </p>
 
             {/* Contact quick strip */}
-            <div className="flex flex-wrap items-center gap-3 mt-4 text-xs text-stone-600">
+            <div className="flex flex-wrap items-center gap-2.5 mt-4 text-xs text-stone-600">
+              <a
+                href={`tel:${GIULIO_CV.contact.phone.replace(/\s+/g, '')}`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-semibold transition-colors cursor-pointer shadow-2xs"
+                title="Direct call"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-amber-700" />
+                <span>{GIULIO_CV.contact.phone}</span>
+              </a>
+
+              <button
+                onClick={() => copyToClipboard(GIULIO_CV.contact.phone, 'phone')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EDE2] border border-[#E2D8C9] transition-colors cursor-pointer group shadow-2xs"
+                title="Copy phone"
+              >
+                {copiedPhone ? (
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                ) : (
+                  <Copy className="w-3 h-3 text-stone-400 group-hover:text-stone-700" />
+                )}
+                <span>Copy</span>
+              </button>
+
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200/80 shadow-2xs text-emerald-900 font-medium">
+                <Car className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Permis B (Clean License &bull; Mobile)</span>
+              </div>
+
               <button
                 onClick={() => copyToClipboard(GIULIO_CV.contact.email, 'email')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EDE2] border border-[#E2D8C9] transition-colors cursor-pointer group shadow-2xs"
@@ -72,19 +101,6 @@ export const CVOverviewSection: React.FC<Props> = ({ onAskAboutTopic }) => {
                 <Mail className="w-3.5 h-3.5 text-amber-700" />
                 <span className="font-medium text-stone-800">{GIULIO_CV.contact.email}</span>
                 {copiedEmail ? (
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-                ) : (
-                  <Copy className="w-3 h-3 text-stone-400 group-hover:text-stone-700" />
-                )}
-              </button>
-
-              <button
-                onClick={() => copyToClipboard(GIULIO_CV.contact.phone, 'phone')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EDE2] border border-[#E2D8C9] transition-colors cursor-pointer group shadow-2xs"
-              >
-                <Phone className="w-3.5 h-3.5 text-amber-700" />
-                <span className="font-medium text-stone-800">{GIULIO_CV.contact.phone}</span>
-                {copiedPhone ? (
                   <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
                 ) : (
                   <Copy className="w-3 h-3 text-stone-400 group-hover:text-stone-700" />

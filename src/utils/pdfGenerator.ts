@@ -37,7 +37,7 @@ export function generateCVPdf(): void {
   // Contact info pill inside header
   doc.setFontSize(8);
   doc.setTextColor(226, 232, 240);
-  const contactText = `Email: ${GIULIO_CV.contact.email}  |  Tel: ${GIULIO_CV.contact.phone}  |  Paris 8e & Brussels  |  Languages: EN (C2), FR (Native), IT (C2)`;
+  const contactText = `Email: ${GIULIO_CV.contact.email}  |  Tel: ${GIULIO_CV.contact.phone}  |  Permis B  |  Paris 8e & Brussels  |  Languages: EN (C2), FR (Native), IT (C2)`;
   doc.text(contactText, margin + 6, y + 18);
 
   y += 32;
@@ -210,6 +210,7 @@ export function downloadMarkdownSummary(): void {
 **Master's Student in Entrepreneurship & Consulting | Corporate Finance**
 Contact: ${GIULIO_CV.contact.email} | ${GIULIO_CV.contact.phone}
 Base: Paris 8e, France & Brussels, Belgium | Born: 27/04/2003 (21 years old)
+Mobility & License: Permis B (Clean European Driving License - Fully Mobile)
 
 ---
 

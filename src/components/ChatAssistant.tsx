@@ -2,14 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Send,
   Mic,
-  MicOff,
   Volume2,
   VolumeX,
-  Sparkles,
   Bot,
-  User,
   RotateCcw,
-  Download,
   PhoneCall,
   Loader2
 } from 'lucide-react';
@@ -43,7 +39,7 @@ export const ChatAssistant: React.FC<Props> = ({
     {
       id: 'welcome',
       role: 'assistant',
-      content: AGENT_PROFILE.scriptAtStart,
+      content: "Bonjour, je suis Aria, l'assistante exécutive de Giulio Pintus. Je suis à votre disposition pour vous détailler son parcours, sa mission de 6 mois chez Century 21 (conseil 360°, dossiers notariaux et intégration IA), ou organiser un échange direct. Comment puis-je vous renseigner ?",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -51,8 +47,7 @@ export const ChatAssistant: React.FC<Props> = ({
   const [loading, setLoading] = useState(false);
   const [playingMessageId, setPlayingMessageId] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [recognitionSupported, setRecognitionSupported] = useState(false);
-  const [autoVoiceReply, setAutoVoiceReply] = useState(true);
+  const [autoVoiceReply, setAutoVoiceReply] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -61,11 +56,10 @@ export const ChatAssistant: React.FC<Props> = ({
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
-      setRecognitionSupported(true);
       const rec = new SpeechRecognition();
       rec.continuous = false;
       rec.interimResults = true;
-      rec.lang = 'en-US';
+      rec.lang = 'fr-FR';
 
       rec.onresult = (event: any) => {
         const transcript = Array.from(event.results)
@@ -74,15 +68,8 @@ export const ChatAssistant: React.FC<Props> = ({
         setInput(transcript);
       };
 
-      rec.onerror = (e: any) => {
-        console.warn('Speech recognition notice:', e);
-        setIsRecording(false);
-      };
-
-      rec.onend = () => {
-        setIsRecording(false);
-      };
-
+      rec.onerror = () => setIsRecording(false);
+      rec.onend = () => setIsRecording(false);
       recognitionRef.current = rec;
     }
 
@@ -119,7 +106,7 @@ export const ChatAssistant: React.FC<Props> = ({
         recognitionRef.current.start();
         setIsRecording(true);
       } catch (err) {
-        console.error('Mic start error:', err);
+        console.error('Mic error:', err);
       }
     }
   };
@@ -159,11 +146,6 @@ export const ChatAssistant: React.FC<Props> = ({
       }
     } catch (err) {
       console.error('Audio playback error:', err);
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(msg.content);
-        utterance.onend = () => setPlayingMessageId(null);
-        window.speechSynthesis.speak(utterance);
-      }
     } finally {
       setPlayingMessageId(null);
     }
@@ -208,7 +190,7 @@ export const ChatAssistant: React.FC<Props> = ({
           {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: `I encountered a momentary issue: ${data.error}. Please feel free to ask again or review Giulio's CV summary.`,
+            content: `Désolée, une erreur est survenue : ${data.error}. N'hésitez pas à télécharger directement le CV complet.`,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           },
         ]);
@@ -240,8 +222,7 @@ export const ChatAssistant: React.FC<Props> = ({
         {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content:
-            "I apologize, the connection to the executive server is temporarily unavailable. Giulio Pintus is currently pursuing his Master in Entrepreneurship and Consulting at ESCE Paris after successfully completing his 6-month mission at Century 21 Brussels. You can download his full CV directly below.",
+          content: "Giulio Pintus poursuit actuellement son Master en Entrepreneuriat & Conseil à l'ESCE Paris après sa mission de 6 mois chez Century 21 Bruxelles. Vous pouvez joindre directement Giulio au +32 479 01 54 75.",
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -255,77 +236,70 @@ export const ChatAssistant: React.FC<Props> = ({
       {
         id: 'welcome-' + Date.now(),
         role: 'assistant',
-        content: AGENT_PROFILE.scriptAtStart,
+        content: "Bonjour, je suis Aria, l'assistante exécutive de Giulio Pintus. Comment puis-je vous aider aujourd'hui ?",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);
   };
 
   const samplePrompts = [
-    'How did Giulio implement AI at Century 21?',
-    'What was his role with buyers and sellers from A to Z?',
-    'Tell me about his Master in Entrepreneurship & Consulting',
-    'What were his responsibilities as Student Council Treasurer?',
-    'How does his financial and legal rigor make a difference?',
-    'What are his language and international skills?',
+    "Comment Giulio a-t-il déployé l'IA et les QR codes chez Century 21 ?",
+    "Détaillez son accompagnement de A à Z avec les acheteurs et vendeurs",
+    "Quels sont son numéro, son permis B et sa mobilité ?",
+    "Présentez son Master à l'ESCE Paris et ses compétences financières",
   ];
 
   return (
-    <div className="bg-white border border-[#E6DDD2] rounded-3xl shadow-xs flex flex-col h-[650px] overflow-hidden">
-      {/* Header */}
-      <div className="px-6 py-4 border-b border-[#EBE4D8] bg-[#FAF7F2] flex items-center justify-between">
+    <div className="bg-white border border-[#E7E5E0] rounded-2xl shadow-xs flex flex-col h-[600px] overflow-hidden">
+      {/* Sober Header */}
+      <div className="px-5 py-3.5 border-b border-[#F0EFEB] bg-[#FAF9F6] flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center text-amber-800 shadow-2xs">
-            <Bot className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-lg bg-stone-200 border border-stone-300 flex items-center justify-center text-stone-800 text-xs font-semibold">
+            A
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-stone-900">{AGENT_PROFILE.name}</h3>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                Online &bull; Ready
-              </span>
+              <span className="text-xs font-semibold text-stone-900">{AGENT_PROFILE.name}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             </div>
-            <p className="text-xs text-stone-500">Giulio Pintus's Executive Career Assistant</p>
+            <p className="text-[11px] text-stone-500">Assistante Exécutive &bull; Réponse immédiate</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Toggle voice response */}
           <button
             onClick={() => setAutoVoiceReply(!autoVoiceReply)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
               autoVoiceReply
-                ? 'bg-amber-100/70 border-amber-300 text-amber-900'
+                ? 'bg-stone-900 text-white border-stone-900'
                 : 'bg-white border-stone-200 text-stone-600 hover:text-stone-900'
             }`}
-            title="Auto-play voice responses"
+            title="Lecture audio automatique"
           >
-            {autoVoiceReply ? <Volume2 className="w-3.5 h-3.5 text-amber-700" /> : <VolumeX className="w-3.5 h-3.5 text-stone-400" />}
-            <span className="hidden sm:inline">{autoVoiceReply ? 'Voice Replies' : 'Silent Mode'}</span>
+            {autoVoiceReply ? <Volume2 className="w-3 h-3" /> : <VolumeX className="w-3 h-3 text-stone-400" />}
+            <span className="hidden sm:inline">{autoVoiceReply ? 'Audio activé' : 'Audio désactivé'}</span>
           </button>
 
-          {/* Switch to Full Voice Call */}
           <button
             onClick={onOpenVoiceCall}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-stone-900 hover:bg-stone-800 text-white text-xs font-medium transition-colors cursor-pointer shadow-2xs"
           >
-            <PhoneCall className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Voice Call</span>
+            <PhoneCall className="w-3 h-3" />
+            <span className="hidden sm:inline">Passer en vocal</span>
           </button>
 
-          {/* Reset chat */}
           <button
             onClick={resetChat}
-            className="p-1.5 rounded-lg bg-white hover:bg-stone-100 text-stone-500 hover:text-stone-800 border border-stone-200 transition-colors cursor-pointer"
-            title="Restart conversation"
+            className="p-1 rounded-lg bg-white hover:bg-stone-100 text-stone-500 border border-stone-200 transition-colors cursor-pointer"
+            title="Réinitialiser la discussion"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#FCFBF9]">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-white">
         {messages.map((msg) => {
           const isBot = msg.role === 'assistant';
           const isPlaying = playingMessageId === msg.id;
@@ -333,28 +307,26 @@ export const ChatAssistant: React.FC<Props> = ({
           return (
             <div
               key={msg.id}
-              className={`flex items-start gap-3 ${isBot ? 'justify-start' : 'justify-end'}`}
+              className={`flex items-start gap-2.5 ${isBot ? 'justify-start' : 'justify-end'}`}
             >
               {isBot && (
-                <div className="w-8 h-8 rounded-lg bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-800 shrink-0 text-xs font-bold mt-1">
+                <div className="w-7 h-7 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-700 shrink-0 text-xs font-medium mt-0.5">
                   A
                 </div>
               )}
 
               <div
-                className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-2xs ${
+                className={`max-w-[85%] sm:max-w-[78%] rounded-2xl px-4 py-3 text-xs sm:text-sm leading-relaxed ${
                   isBot
-                    ? 'bg-[#F5EFE6] border border-[#E7DDCE] text-stone-900 rounded-tl-sm'
-                    : 'bg-amber-600 text-white font-medium rounded-tr-sm shadow-xs'
+                    ? 'bg-[#FAF9F6] border border-[#EBE8E1] text-stone-800 rounded-tl-xs'
+                    : 'bg-stone-900 text-white rounded-tr-xs'
                 }`}
               >
-                <div className="text-sm whitespace-pre-wrap leading-relaxed">
-                  {msg.content}
-                </div>
+                <div className="whitespace-pre-wrap">{msg.content}</div>
 
                 <div
-                  className={`flex items-center justify-between gap-3 mt-2 pt-2 border-t text-[11px] ${
-                    isBot ? 'border-[#E6DDD0] text-stone-500' : 'border-amber-500/50 text-amber-100'
+                  className={`flex items-center justify-between gap-3 mt-2 pt-1.5 border-t text-[10px] ${
+                    isBot ? 'border-[#EBE8E1] text-stone-400' : 'border-stone-800 text-stone-400'
                   }`}
                 >
                   <span>{msg.timestamp}</span>
@@ -362,76 +334,47 @@ export const ChatAssistant: React.FC<Props> = ({
                   {isBot && (
                     <button
                       onClick={() => handlePlayAudio(msg)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-                        isPlaying
-                          ? 'bg-amber-600 text-white font-semibold shadow-2xs'
-                          : 'hover:bg-[#EAE1D3] text-stone-700 hover:text-amber-900'
-                      }`}
+                      className="text-stone-500 hover:text-stone-800 font-medium cursor-pointer flex items-center gap-1"
                     >
                       {isPlaying ? (
-                        <>
-                          <div className="flex items-center gap-0.5 h-3">
-                            <span className="w-0.5 bg-white rounded-full animate-wave-1 h-3" />
-                            <span className="w-0.5 bg-white rounded-full animate-wave-2 h-2" />
-                            <span className="w-0.5 bg-white rounded-full animate-wave-3 h-3" />
-                          </div>
-                          <span>Stop</span>
-                        </>
+                        <span className="text-stone-900 font-semibold">Lecture en cours...</span>
                       ) : (
-                        <>
-                          <Volume2 className="w-3.5 h-3.5 text-amber-800" />
-                          <span>Listen</span>
-                        </>
+                        <span>Écouter</span>
                       )}
                     </button>
                   )}
                 </div>
               </div>
-
-              {!isBot && (
-                <div className="w-8 h-8 rounded-lg bg-amber-700 border border-amber-800 flex items-center justify-center text-white shrink-0 text-xs font-bold mt-1 shadow-2xs">
-                  <User className="w-4 h-4" />
-                </div>
-              )}
             </div>
           );
         })}
 
         {loading && (
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-800 shrink-0 text-xs font-bold mt-1">
-              A
-            </div>
-            <div className="bg-[#F5EFE6] border border-[#E7DDCE] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2.5 text-xs text-stone-600 shadow-2xs">
-              <Loader2 className="w-4 h-4 animate-spin text-amber-700" />
-              <span>Aria is formulating a precise, professional reply...</span>
-            </div>
+          <div className="flex items-center gap-2 text-stone-400 text-xs py-2">
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <span>Aria rédige sa réponse...</span>
           </div>
         )}
 
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggested Quick Inquiries */}
-      <div className="px-4 py-2.5 border-t border-[#EBE4D8] bg-[#FAF7F2] overflow-x-auto">
-        <div className="flex items-center gap-2 min-w-max">
-          <span className="text-[11px] uppercase font-bold text-stone-500 tracking-wider flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-amber-700" /> Suggestions:
-          </span>
-          {samplePrompts.map((p, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSendMessage(p)}
-              className="text-xs px-2.5 py-1 rounded-lg bg-white hover:bg-amber-50 border border-[#DED4C5] text-stone-700 hover:text-stone-900 transition-colors shadow-2xs cursor-pointer"
-            >
-              {p}
-            </button>
-          ))}
-        </div>
+      {/* Prompt Suggestions */}
+      <div className="px-4 py-2 bg-[#FAF9F6] border-t border-[#F0EFEB] flex items-center gap-2 overflow-x-auto text-xs no-scrollbar">
+        <span className="text-[11px] text-stone-400 font-medium shrink-0">Suggestions :</span>
+        {samplePrompts.map((prompt, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleSendMessage(prompt)}
+            className="shrink-0 px-2.5 py-1 rounded-lg bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 text-xs transition-colors cursor-pointer"
+          >
+            {prompt}
+          </button>
+        ))}
       </div>
 
-      {/* Input Form Bar */}
-      <div className="p-4 border-t border-[#EBE4D8] bg-[#FAF7F2]">
+      {/* Input Form */}
+      <div className="p-3 bg-white border-t border-[#F0EFEB]">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -439,18 +382,18 @@ export const ChatAssistant: React.FC<Props> = ({
           }}
           className="flex items-center gap-2"
         >
-          {recognitionSupported && (
+          {recognitionRef.current && (
             <button
               type="button"
               onClick={toggleRecording}
-              className={`p-3 rounded-xl border transition-all cursor-pointer ${
+              className={`p-2 rounded-xl border transition-colors cursor-pointer ${
                 isRecording
-                  ? 'bg-rose-100 border-rose-300 text-rose-700 animate-pulse'
-                  : 'bg-white border-[#DED4C5] text-stone-700 hover:text-stone-900 hover:bg-stone-50 shadow-2xs'
+                  ? 'bg-red-500 text-white border-red-500 animate-pulse'
+                  : 'bg-white hover:bg-stone-50 text-stone-600 border-stone-200'
               }`}
-              title={isRecording ? 'Stop microphone' : 'Speak into microphone'}
+              title={isRecording ? 'Arrêter dictée' : 'Dicter votre question'}
             >
-              {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              <Mic className="w-4 h-4" />
             </button>
           )}
 
@@ -458,14 +401,15 @@ export const ChatAssistant: React.FC<Props> = ({
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Aria anything about Giulio (Century 21, AI, Master's, skills)..."
-            className="flex-1 bg-white border border-[#DCD2C3] focus:border-amber-600 focus:ring-1 focus:ring-amber-600 text-sm text-stone-900 px-4 py-3 rounded-xl outline-none transition-colors placeholder:text-stone-400 shadow-2xs"
+            placeholder="Posez une question sur son parcours, Century 21, sa mobilité..."
+            disabled={loading}
+            className="flex-1 bg-[#FAF9F6] border border-[#EBE8E1] rounded-xl px-3.5 py-2 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:border-stone-400 transition-colors"
           />
 
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="p-3 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white font-bold transition-all shadow-md shadow-amber-600/20 cursor-pointer disabled:cursor-not-allowed"
+            className="p-2 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:bg-stone-200 text-white disabled:text-stone-400 transition-colors cursor-pointer shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>

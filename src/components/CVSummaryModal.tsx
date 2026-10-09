@@ -13,7 +13,9 @@ import {
   Award,
   CheckCircle2,
   X,
-  ExternalLink
+  ExternalLink,
+  Car,
+  PhoneCall
 } from 'lucide-react';
 import { GIULIO_CV } from '../data/cvData.ts';
 import { generateCVPdf, downloadMarkdownSummary } from '../utils/pdfGenerator.ts';
@@ -46,7 +48,7 @@ export const CVSummaryModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => generateCVPdf()}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-all shadow-md shadow-amber-600/20 cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-medium transition-colors cursor-pointer shadow-xs"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download PDF</span>
@@ -71,15 +73,26 @@ export const CVSummaryModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   Master in Entrepreneurship & Consulting | Corporate Finance | ESCE Paris
                 </p>
                 <div className="flex flex-wrap items-center gap-3 text-xs text-stone-600 mt-3">
-                  <span className="flex items-center gap-1.5 font-medium">
-                    <Mail className="w-3.5 h-3.5 text-amber-700" />
-                    {GIULIO_CV.contact.email}
+                  <a
+                    href={`tel:${GIULIO_CV.contact.phone.replace(/\s+/g, '')}`}
+                    className="flex items-center gap-1.5 font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 hover:bg-amber-100 transition-colors"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5 text-amber-700" />
+                    {GIULIO_CV.contact.phone}
+                  </a>
+                  <span>&bull;</span>
+                  <span className="flex items-center gap-1.5 font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    <Car className="w-3.5 h-3.5 text-emerald-700" />
+                    Permis B (Clean License &bull; Mobile)
                   </span>
                   <span>&bull;</span>
-                  <span className="flex items-center gap-1.5 font-medium">
-                    <Phone className="w-3.5 h-3.5 text-amber-700" />
-                    {GIULIO_CV.contact.phone}
-                  </span>
+                  <a
+                    href={`mailto:${GIULIO_CV.contact.email}`}
+                    className="flex items-center gap-1.5 font-medium hover:text-amber-800 transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-amber-700" />
+                    {GIULIO_CV.contact.email}
+                  </a>
                   <span>&bull;</span>
                   <span className="flex items-center gap-1.5 font-medium">
                     <MapPin className="w-3.5 h-3.5 text-amber-700" />

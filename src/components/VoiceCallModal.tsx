@@ -28,7 +28,7 @@ export const VoiceCallModal: React.FC<Props> = ({ isOpen, onClose, selectedVoice
   const [isUserTalking, setIsUserTalking] = useState(false);
   const [transcriptHistory, setTranscriptHistory] = useState<Array<{ role: 'assistant' | 'user'; text: string }>>([]);
   const [currentTranscript, setCurrentTranscript] = useState('');
-  const [statusMessage, setStatusMessage] = useState('Établissement de la ligne vocale sécurisée...');
+  const [statusMessage, setStatusMessage] = useState('Connecting to secure voice line...');
 
   const wsRef = useRef<WebSocket | null>(null);
   const recognitionRef = useRef<any>(null);
